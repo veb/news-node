@@ -6,15 +6,11 @@ const { APP_SECRET, getUserId } = require("../utils");
 async function post(parent, args, context, info) {
   const userId = getUserId(context);
 
-  const newLink = context.prisma.link.create({
+  const newLink = await context.prisma.link.create({
     data: {
       url: args.url,
       description: args.description,
-      postedBy: {
-        connect: {
-          id: userId,
-        },
-      },
+      postedBy: { connect: { id: userId } },
     },
   });
   context.pubsub.publish("NEW_LINK", newLink);
@@ -74,6 +70,7 @@ async function login(parent, args, context, info) {
 
 async function vote(parent, args, context, info) {
   const userId = getUserId(context);
+
   const vote = await context.prisma.vote.findUnique({
     where: {
       linkId_userId: {

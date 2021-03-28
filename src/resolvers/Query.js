@@ -1,3 +1,7 @@
+async function info(parent, args, context, info) {
+  return "Returned successful API v0.1";
+}
+
 async function feed(parent, args, context, info) {
   const where = args.filter
     ? {
@@ -25,4 +29,5 @@ async function feed(parent, args, context, info) {
 
 module.exports = {
   feed,
+  info,
 };

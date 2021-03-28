@@ -1,12 +1,20 @@
 const jwt = require("jsonwebtoken");
 const APP_SECRET = "sdhjd6uyj2h3ewsdh;;45;";
 
+function isNumber(value) {
+  return typeof value === "number" && isFinite(value);
+}
+
 function getTokenPayload(token) {
   return jwt.verify(token, APP_SECRET);
 }
 
 function getUserId(req, authToken) {
-  if (req) {
+  if (isNumber(req.userId)) {
+    return req.userId;
+  }
+
+  if (req.headers) {
     const authHeader = req.headers.authorization;
     if (authHeader) {
       const token = authHeader.replace("Bearer ", "");
@@ -16,15 +24,18 @@ function getUserId(req, authToken) {
       const { userId } = getTokenPayload(token);
       return userId;
     }
-  } else if (authToken) {
+  }
+
+  if (authToken) {
     const { userId } = getTokenPayload(authToken);
     return userId;
   }
 
-  throw new Error("Not authenticated");
+  throw new Error("Not Authenticated");
 }
 
 module.exports = {
   APP_SECRET,
   getUserId,
+  isNumber,
 };

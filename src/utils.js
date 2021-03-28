@@ -24,9 +24,7 @@ function getUserId(req, authToken) {
       const { userId } = getTokenPayload(token);
       return userId;
     }
-  }
-
-  if (authToken) {
+  } else if (authToken) {
     const { userId } = getTokenPayload(authToken);
     return userId;
   }
